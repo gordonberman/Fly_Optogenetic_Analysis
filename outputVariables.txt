@@ -1,0 +1,103 @@
+outputStats structure contents:
+
+
+	fileData -> struct containing information about the files (embedding and LED) used
+	
+		fileData.N -> Total number of found embedding files
+		fileData.files -> cell array of embedding files
+		fileData.led_files -> cell array of LED files
+		fileData.strains -> cell array of strain names
+		fileData.cameraNumbers -> Nx1 array of camera numbers
+		fileData.filming_sessions -> cell array of filming session names
+		fileData.strainNames -> cell array of unique strain names
+		fileData.strainNumbers -> Nx1 array of strain numbers 
+		fileData.filming_session_names -> cell array of unique session names
+		fileData.filming_session_numbers -> Nx1 array of filming session numbers
+		fileData.isControl -> Nx1 binary array giving whether the fly is a 
+					control or not
+		fileData.led_filming_sessions -> cell array of LED file filming session names
+		fileData.led_filming_session_numbers -> 1d array giving correspondences between
+				      filming_session_names and led_filming_sessions
+		
+	parameters -> struct containing all parameters used to run analysis
+
+	files -> cell array containing paths to embedding files used
+
+	led_file -> path to LED file
+
+	cameraNumbers -> array of camera numbers for each file
+
+	isControl -> binary array giving whether or not each file is a control animal
+
+	xx -> 1d array giving the scale of the behavioral space maps
+
+	LEDs -> cell array of binary arrays for each individual (true if LED is on, false if off)
+
+	numIndividuals -> number of individuals in data set
+
+	numControls -> number of control flies in data set
+
+	numExp -> number of experimental flies in data set
+
+	entropies_ts -> time points where behavioral space entropies are calculated
+
+	entropies_exp -> time series of behavioral space entropies (experimental flies)
+
+	entropies_control -> time series of behavioral space entropies (control flies)
+	
+	startTime -> beginning of time region to look for changes (in seconds, 0 = stimulus on)
+
+	endTime -> end of time region to look for changes (in seconds, 0 = stimulus on)	
+
+	density -> average behavioral space density over all individuals
+
+	entropy -> estimated entropy of “density”
+	
+	numComparisons -> estimated number of comparisons to use in multiple hypothesis testing
+
+	sigAlpha -> baseline significance (before multiple hypothesis corrections)
+
+	alpha -> p-Value threshold after multiple hypothesis corrections
+		
+	rankSums -> rank sum p-Values comparing experimental to control flies
+
+	rankSums_exp -> rank sum p-Values comparing experimental on vs. experimental off
+
+	mask -> binary image containing regions of statistical significance
+
+	median_exp -> median(testRegion - offRegion) for each point in space (experimental flies)
+
+	median_control -> median(testRegion - offRegion) for each point in space (control flies)
+	
+	differenceMap -> “median_exp”, but with statistical insignificant regions zeroed-out
+
+	densityThreshold -> threshold on density to draw boundaries around behavioral space
+	
+	positiveMask -> behavioral space regions of significant up-regulation during test period
+
+	negativeMask -> behavioral space regions of significant down-regulation during test period
+
+	totalNumRegions -> total number of statistically significant regions
+
+    	numPositiveRegions -> number of statistically significant up-regulated regions
+
+    	numNegativeRegions -> number of statistically significant down-regulated regions
+
+	ts -> time points where behavioral space time series are evaluated (in s)
+
+	vals -> numIndividuals x length(ts) x totalNumRegions array of time series in each region
+	
+	regions -> cell array where regions{1} = region numbers for positive mask and 
+			regions{2} = region numbers for negative mask
+
+	regionImages -> 3d array of fly images within each of the found regions
+
+	numRegions -> numRegions(1) = numPositiveRegions, numRegions(2) = numNegativeRegions
+
+	
+
+
+
+
+
+
