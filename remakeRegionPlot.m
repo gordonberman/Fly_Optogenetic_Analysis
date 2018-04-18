@@ -19,7 +19,6 @@ function stimulusPlots = remakeRegionPlot(outputStats,regionNum,omitTimeSeriesPl
     bootstrapNum = outputStats.parameters.bootstrapNum;
     confBound = outputStats.parameters.confBound;
     yBins = outputStats.parameters.yBins;
-    %BB = bwboundaries(outputStats.density > outputStats.densityThreshold);
     load('DI_training_set.mat','B');
     BB = B;
     vals = outputStats.vals;
@@ -54,23 +53,14 @@ function stimulusPlots = remakeRegionPlot(outputStats,regionNum,omitTimeSeriesPl
             figure
             r = cSums(k) + i;
             
-            subplot(1,3,2)
+            subplot(1,2,2)
             currentVals = vals(:,:,r);
             stimulusPlots{count} = makeStimulusTriggeredPlots(ts,currentVals,...
                 LEDs,isControl,numSigma,timeBins,yBins,startTime,endTime,LED_spacing);
             count = count + 1;
+
             
-            subplot(1,3,3)
-            M = outputStats.regionImages(:,:,r);
-            M = sqrt(M.^2 ./ sum(M(:).^2));
-            imagesc(M);
-            colormap(cc)
-            
-            caxis([.01 .03])
-            axis equal tight off xy
-            freezeColors;
-            
-            subplot(1,3,1)
+            subplot(1,2,1)
             
             imagesc(xx,xx,regions{k} == i);
             

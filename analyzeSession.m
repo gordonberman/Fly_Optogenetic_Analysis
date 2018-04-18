@@ -33,8 +33,7 @@ function outputStats = analyzeSession(sessionName,startTime,endTime,parameters)
     parameters = setRunParameters(parameters);
 
     fprintf(1,'Loading Training Set Data\n');
-    load('DI_training_set.mat','yData','signalData','vecs',...
-        'f','pixels','imageSize','thetas','B')
+    load('DI_training_set.mat','B')
     BB = B;
     
     fprintf(1,'Loading Embedding Data\n');
@@ -261,68 +260,12 @@ function outputStats = analyzeSession(sessionName,startTime,endTime,parameters)
     outputStats.numRegions = numRegions;
     
     if ~isempty(numRegions)
-        
         cSums = [0; cumsum(numRegions)];
-        
-        if sum(numRegions) > 0
-            
-            fprintf(1,'Finding Region Images\n');
-            
-            iRadonImageSize = size(iradon(zeros(imageSize),thetas));
-            images = zeros(iRadonImageSize(1),iRadonImageSize(2),sum(numRegions));
-            
-            nF = length(f);
-            numModes = length(signalData(1,:))./nF;
-            baselineValues = zeros(numModes,1);
-            meanSignalData = mean(signalData);
-            
-            for i=1:numModes
-                baselineValues(i) = sum(meanSignalData((1:nF)+(i-1)*nF));
-            end
-            
-            N_training = length(yData(:,1));
-            a = round((yData + max(xx))*length(xx)/(2*max(xx)));
-            a(a<1) = 1;
-            a(a>length(xx)) = length(xx);
-            
-            for j=1:length(numRegions)
-                
-                regionValues = zeros(N_training,1);
-                for i=1:N_training
-                    regionValues(i) = diag(regions{j}(a(i,2),a(i,1)));
-                end
-                
-                for i=1:numRegions(j)
-                    currentData = mean(signalData(regionValues == i,:));
-                    if ~isempty(currentData)
-                        r = cSums(j) + i;
-                        images(:,:,r) = ...
-                            makeRegionImagePlot(currentData,f,vecs,pixels,...
-                            thetas,imageSize,baselineValues);
-                    end
-                end
-                
-            end
-            
-            outputStats.regionImages = images;
-            
-        else
-            
-            outputStats.regionImages = zeros(imageSize(1),imageSize(2),sum(numRegions));
-            
-        end
-        
-    else
-        
-        outputStats.regionImages = zeros(imageSize(1),imageSize(2),numRegions);
-        
     end
-    
-    
+
     numSigma = parameters.numSigma;
     yBins = parameters.yBins;
     dx = xx(2) - xx(1);
-    %BB = bwboundaries(significanceData.density > densityThreshold);
     totalNumRegions = sum(numRegions);
     if ~isempty(numRegions)
         outputStats.totalNumRegions = totalNumRegions;
@@ -338,7 +281,7 @@ function outputStats = analyzeSession(sessionName,startTime,endTime,parameters)
     confBound = outputStats.parameters.confBound;
     
     
-    if parameters.plotsOn
+    if parameters.plotsOn && sum(numRegions) > 0
         
         fprintf(1,'Making Plots\n');
         stimulusPlots = cell(totalNumRegions,1);
@@ -350,24 +293,13 @@ function outputStats = analyzeSession(sessionName,startTime,endTime,parameters)
                 figure
                 r = cSums(k) + i;
                 
-                subplot(1,3,2)
+                subplot(1,2,2)
                 currentVals = vals(:,:,r);
                 stimulusPlots{count} = makeStimulusTriggeredPlots(ts,currentVals,...
                     LEDs,isControl,numSigma,timeBins,yBins,startTime,endTime,outputStats.LED_spacing);
                 count = count + 1;
                 
-                
-                subplot(1,3,3)
-                M = outputStats.regionImages(:,:,r);
-                M = sqrt(M.^2 ./ sum(M(:).^2));
-                imagesc(M);
-                colormap(cc)
-                
-                caxis([.01 .03])
-                axis equal tight off xy
-                freezeColors;
-                
-                subplot(1,3,1)
+                subplot(1,2,1)
                 
                 imagesc(xx,xx,regions{k} == i);
                 
