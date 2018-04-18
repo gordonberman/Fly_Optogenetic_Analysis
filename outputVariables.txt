@@ -90,8 +90,6 @@ outputStats structure contents:
 	regions -> cell array where regions{1} = region numbers for positive mask and 
 			regions{2} = region numbers for negative mask
 
-	regionImages -> 3d array of fly images within each of the found regions
-
 	numRegions -> numRegions(1) = numPositiveRegions, numRegions(2) = numNegativeRegions
 
 	
