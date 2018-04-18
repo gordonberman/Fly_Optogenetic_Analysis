@@ -1,0 +1,1 @@
+function [assignments,densities] = findRegionAssignments
